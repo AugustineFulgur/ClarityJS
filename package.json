@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@babel/parser": "^7.28.3",
+    "@babel/traverse": "^7.28.3",
+    "require-all": "^3.0.0",
+    "traverse": "^0.6.11"
+  }
+}
