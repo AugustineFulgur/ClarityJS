@@ -39,6 +39,12 @@ JavaScript解混淆工具，提供多种解混淆配置，支持自定义模块�
 
 ![alt text](images/3.png)
 
+### 1.4 cj.constclear
+
+简化永真、永假、十六进制、复杂化常量。
+
+![alt text](images/4.png)
+
 ## 2 支持解密配置
 
 【施工中】
@@ -47,4 +53,4 @@ JavaScript解混淆工具，提供多种解混淆配置，支持自定义模块�
 
 ### jsjiami.com.v7
 
-【施工中】
+详情请看：https://forum.butian.net/share/4544

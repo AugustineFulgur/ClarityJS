@@ -20,6 +20,7 @@ function get_unique(p) {
 
 function on_start(p){
     //变量重命名
+    console.log(rename_startwith);
     Object.keys(p.scope.bindings).forEach(v=>{
         //遍历所有变量绑定
         if(v.startsWith(rename_startwith)){
@@ -52,9 +53,10 @@ function on_start(p){
 
 module.exports = { 
     main: {
-        "Program":on_start,"Function":on_start
+        "Program":on_start,
+        "Function":on_start
     },
     c: ()=>{return count;}, //天才出生了
     n: __name__,
-    startwith: (s)=>{rename_startwith=s;}
+    startwith: (s)=>{rename_startwith=s;} 
 };

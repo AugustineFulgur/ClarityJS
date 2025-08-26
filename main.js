@@ -5,11 +5,13 @@ const generator = require('@babel/generator');
 const requireAll = require('require-all'); // 引入require-all
 const cj = requireAll(__dirname + '/fragment');
 
+cj.rename.startwith("00")
 const __main__=[
     //请注意调用顺序，比如手，ff.rename推荐最后调用
     //cj.redefined,
     //cj.rename,
-    cj.propertyclear
+    //cj.propertyclear,
+    cj.constclear
 ]
 
 //待解混淆文件
