@@ -74,14 +74,15 @@ function on_start_binary(p){
     //处理带有隐式转换的情况
     //最粑粑的地方来了
     if(["+","-","*","/","==","&&","||","!="].includes(p.node.operator)){
+        count+=1;
         __replace(p,eval(generator.default(p.node).code));
     }
 }
 
 module.exports = { 
     main: {
-        "BinaryExpression": on_start_binary, //合在一起方便一些
-        "UnaryExpression": on_start,
+        "BinaryExpression": on_start_binary, 
+        "UnaryExpression": on_start, //合在一起方便一点
         "NumericLiteral": on_start,
         "MemberExpression": on_start
     },

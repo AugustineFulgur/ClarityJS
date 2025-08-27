@@ -1,17 +1,17 @@
 const fs = require("fs");
-const parser = require("@babel/parser"); 
+const parser = require("@babel/parser");
 const traverse = require('@babel/traverse');
 const generator = require('@babel/generator');
 const requireAll = require('require-all'); // 引入require-all
 const cj = requireAll(__dirname + '/fragment');
 
-const __main__=[
+const __main__ = [
     //请注意调用顺序，比如，ff.rename推荐最后调用
     //cj.redefined,
     //cj.rename,
-    cj.propertyclear,
+    //cj.propertyclear,
     cj.constclear,
-    cj.trimly,
+    cj.propertyclear,
 ]
 
 //待解混淆文件
@@ -22,17 +22,19 @@ let jscode = fs.readFileSync(
 );
 
 //console.log(jscode);
-//循环执行次数，默认为1
-for(let _=0;_<10;_++){
-    let ast = parser.parse(jscode);//js转ast
-    __main__.forEach(e => {
+
+let ast = parser.parse(jscode); //js转ast
+__main__.forEach(e => {
     traverse.default(ast, e.main);
-    console.log("【"+e.n+"】"+"执行完毕，执行了"+e.c()+"次。");
-    });
-    jscode = generator.default(ast,opts = {jsescOption:{"minimal":true}}).code;
-}
+    console.log("【" + e.n + "】" + "执行完毕，执行了" + e.c() + "次。");
+});
+jscode = generator.default(ast, opts = {
+    jsescOption: {
+        "minimal": true
+    }
+}).code;
+
 //console.log(code);
+
 //输出文件
 fs.writeFile('./222.js', jscode, (err) => {});
-
-

@@ -61,7 +61,8 @@ JavaScript解混淆工具，提供多种解混淆配置，支持自定义模块�
 
 尝试还原执行流。主模块。
 
-如果还原存在问题，可以手动设置
+如果还原存在问题，可以手动设置。
+【施工中】
 
 ### 1.7 cj.manual_refunction
 
@@ -70,9 +71,12 @@ JavaScript解混淆工具，提供多种解混淆配置，支持自定义模块�
 ## 2 支持解密配置
 
 【施工中】
-
-## 3 支持解密算法（？）
-
-### jsjiami.com.v7
+### 2.1 jsjiami.com.v7
 
 详情请看：https://forum.butian.net/share/4544
+
+### 2.2 JSFuck
+
+https://jsfuck.com/
+
+main=[cj.constclear,cj.propertyclear] 直接调用。
