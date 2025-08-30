@@ -20,7 +20,6 @@ function get_unique(p) {
 
 function on_start(p){
     //变量重命名
-    console.log(rename_startwith);
     Object.keys(p.scope.bindings).forEach(v=>{
         //遍历所有变量绑定
         if(v.startsWith(rename_startwith)){

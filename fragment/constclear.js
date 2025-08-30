@@ -1,8 +1,9 @@
 const tps = require('@babel/types');//类型
 const generator = require('@babel/generator');
+const { is } = require('@babel/traverse/lib/path/introspection');
 const __name__="简化常量算式";
 let count=0;
-let time=5000; //遍历次数
+let maxdept=10; //遍历次数
 //常量优化
 
 //----------------------------------------------------------------------------------------------
@@ -13,7 +14,40 @@ let time=5000; //遍历次数
 function is_constant(n,dept=0){
     //以前不是支持函数后面跟问号的吗
     //二元
-    if(dept>=time) return false;
+    if(dept>=maxdept) return false;
+    if(tps.isBinaryExpression(n)){
+        return is_constant(n.left,dept+1) && is_constant(n.right,dept+1);
+    }
+    //新增识别数组类表达式
+    else if(tps.isMemberExpression(n)){ 
+        return is_constant(n.object,dept+1) && (n.computed ? is_constant(n.property,dept+1) : tps.isIdentifier(n.property));
+    }
+    //一元
+    else if(tps.isUnaryExpression(n)){
+        return is_constant(n.argument,dept+1);
+    }
+    //纯值判断 
+    else if(tps.isNumericLiteral(n) || tps.isStringLiteral(n) || tps.isBooleanLiteral(n) || tps.isNullLiteral(n)){
+        return dept!==0 //跳过本来就是纯值的部分，节省不必要的执行
+        || n.extra?.raw?.startsWith('0x');  //优化0x 这缩进越来越奇怪了，有没有js缩进插件 
+    }
+    //数组：常量数组、空数组处理
+    else if((tps.isArrayExpression(n))){
+        return n.elements.every(e=>is_constant(e,dept+1));
+    }
+    //对常见常量函数的处理
+    else if(tps.isCallExpression(n) && tps.isMemberExpression(n.callee)){
+        return is_constant(n.callee.object,dept+1) && is_constant(n.callee.property) && n.arguments.every(e=>is_constant(e,dept+1));
+    }
+    else if(tps.isIdentifier(n)){
+        return n.name==='NaN';
+    }
+    else{
+        return false;
+    }
+}
+
+function get_constant_value(p){
     if(tps.isBinaryExpression(n)){
         return is_constant(n.left,dept+1) && is_constant(n.right,dept+1);
     }
@@ -26,19 +60,20 @@ function is_constant(n,dept=0){
         return is_constant(n.argument,dept+1);
     }
     //纯值判断 
-    else if(tps.isNumericLiteral(n) || tps.isStringLiteral(n)){
+    else if(tps.isNumericLiteral(n) || tps.isStringLiteral(n) || tps.isBooleanLiteral(n)){
         return !dept==0 //跳过本来就是纯值的部分，节省不必要的执行
         || n.extra?.raw?.startsWith('0x');  //优化0x 这缩进越来越奇怪了，有没有js缩进插件 
     }
     //数组：常量数组、空数组处理
     else if((tps.isArrayExpression(n))){
-        n.elements.forEach(e => {
-            if(!is_constant(e,dept+1)) return false;
-        });
-        return true;
+        return n.elements.every(e=>is_constant(e,dept+1));
     }
-    else{
-        return false;
+    //对常见常量函数的处理
+    else if(tps.isCallExpression(n) && tps.isMemberExpression(n.callee)){
+        return is_constant(n.callee.object,dept+1) && tps.isIdentifier(n.callee.property) && n.arguments.every(e=>is_constant(e,dept+1));
+    }
+    else if(tps.isIdentifier(n)){
+        return n.name==='NaN';
     }
 }
 
@@ -62,10 +97,11 @@ function on_start(p){
         try{
             let re=eval(generator.default(p.node).code);
             count+=1;
-            __replace(p,s);
+            __replace(p,re);
         } 
         catch(e){
             //不支持的直接跳过
+            //console.log(e);
         }
     }
 }
@@ -81,7 +117,7 @@ function on_start_binary(p){
 
 module.exports = { 
     main: {
-        "BinaryExpression": on_start_binary, 
+        "BinaryExpression": on_start,  //在没什么效果的时候这里可以换成on_start_binary
         "UnaryExpression": on_start, //合在一起方便一点
         "NumericLiteral": on_start,
         "MemberExpression": on_start
