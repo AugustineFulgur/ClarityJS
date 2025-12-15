@@ -51,10 +51,10 @@ function on_start(p){
 }
 
 module.exports = { 
-    main: {
+    main: [{
         "Program":on_start,
         "Function":on_start
-    },
+    }],
     c: ()=>{return count;}, //天才出生了
     n: __name__,
     startwith: (s)=>{rename_startwith=s;} 

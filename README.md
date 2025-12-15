@@ -5,7 +5,9 @@ JavaScript解混淆工具，提供多种解混淆配置，支持自定义模块�
 
 需要注意的是，本工具用了很多次eval（带有unsafe的模块）。请确认代码本身的情况或在断网的虚拟机中运行，避免执行到奇怪的地方。
 
-【施工中】
+## TIPS
+
+遇见解不出来的混淆代码可以找我（在公众号重生之成为赛博女保安下留言即可，工具的更新和解混淆实战也更新在这里），如果比较有意思我会给你解一下。
 
 ## 运行
 
@@ -50,7 +52,7 @@ JavaScript解混淆工具，提供多种解混淆配置，支持自定义模块�
 
 ![alt text](images/4.png)
 
-### 1.5 【unsafe】 cj.trimly <<< cj.constclear
+### 1.5 【unsafe】 cj.trimly_if <<< cj.constclear
 
 删除永远不会执行的部分，如if的不执行分支和三目运算符的不执行分支。
 
@@ -58,27 +60,39 @@ JavaScript解混淆工具，提供多种解混淆配置，支持自定义模块�
 
 ![alt text](images/5.png)
 
-### 1.6 cj.auto_reconstuct
+### 1.6 cj.manual_jsjiami_main <<< cj.redefined
 
-尝试还原执行流。主模块。
+jsjiami【中级|高级配置】解混淆主模块。
 
-如果还原存在问题，可以手动设置。
-【施工中】
+需要手动补充前几个函数的内容，直接复制粘贴在这个代码里就可以，判断方法和依赖在我文章里有写，详见2.1节。
 
-### 1.7 cj.manual_refunction
+### 1.7 cj.objectrestore
 
-将特定的函数调用形参还原以便阅读。
+简化对象引用式混淆，也就是将代码和函数放在object里的混淆。
+
+### 1.8 cj.trimly_switch <<< cj.constclear
+
+还原OLLVM式平坦控制流-switch形式。
+
+!! 强烈建议在cj.constclear之后调用。
+
+![alt text](images/6.png)
 
 ## 2 支持解密配置
 
-【施工中】
-### 2.1 jsjiami.com.v7
+### 2.1 manual | jsjiami.com.v7【中级配置】
 
 详情请看：[某游戏无良辅助插件逆向分析与代码还原实践](https://xz.aliyun.com/news/18778)
+main=[cj.redefined,cj.manual_jsjiami_main,cj.constclear,cj.propertyclear,cj.trimly_if]。请注意先修改manual插件内容。
 
 ### 2.2 JSFuck
 
 https://jsfuck.com/
 
-main=[cj.constclear,cj.propertyclear] 直接调用。
-or [How to fuck JSFuck](https://forum.butian.net/share/4561)
+详情请看：[How to fuck JSFuck](https://forum.butian.net/share/4561)
+main=[cj.constclear,cj.propertyclear] 直接调用。请注意先修改manual插件内容。
+
+### 2.3 manual | jsjiami.com.v7【高级配置】
+
+详情请看：https://nccsec.cn/myTopic/detail?id=pKW2xdTj8gE
+main=[cj.redefined,cj.manual_jsjiami_main,cj.objectrestore,cj.constclear,cj.propertyclear,cj.trimly_if,cj.trimly_switch]。请注意先修改manual插件内容。

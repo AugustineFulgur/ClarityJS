@@ -36,12 +36,54 @@ function on_start(p){
             p.remove();
         }
     }
+    //3. 简化重定义；简化函数声明 这个是给mss写的
+    if (tps.isIdentifier(n.id) && tps.isArrowFunctionExpression(n.init) && n.init.params.length === 0) {
+        // 支持两种情况：
+        // 1. 函数体是块语句且只有一个返回语句 ({ return xxx; })
+        // 2. 函数体是表达式 (直接返回表达式结果)
+        
+        let returnValue;
+        if (tps.isBlockStatement(n.init.body)) {
+            // 检查函数体是否只有一个返回语句
+            const body = n.init.body.body;
+            if (body.length === 1 && tps.isReturnStatement(body[0])) {
+                returnValue = body[0].argument;
+            } else {
+                // 不符合简化条件
+                return;
+            }
+        } else {
+            // 函数体是表达式，可以直接使用
+            returnValue = n.init.body;
+        }
+
+        // 获取左值的所有绑定
+        let binding = p.scope.getBinding(n.id.name);
+        if (!binding || binding.constantViolations.length > 0) return;
+        
+        count += 1;
+        let v = 0;
+        
+        // 替换所有引用为返回值
+        binding.referencePaths.map((rpath) => {
+            // 克隆节点以防修改原始AST
+            const clonedReturnValue = tps.cloneDeep(returnValue);
+            rpath.replaceWith(clonedReturnValue);
+            v++;
+        });
+        
+        if (v != 0 && v === binding.referencePaths.length) {
+            // 左值没有其它被引用的地方了，删除左值的声明
+            p.remove();
+        }
+    }
+
 }
 
 module.exports = { 
-    main: {
+    main: [{
         "VariableDeclarator": on_start 
-    },
+    }],
     c: ()=>{return count;}, //天才出生了
     n: __name__
 };
