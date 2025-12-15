@@ -74,10 +74,11 @@ JavaScript解混淆工具，提供多种解混淆配置，支持自定义模块�
 【施工中】
 ### 2.1 jsjiami.com.v7
 
-详情请看：https://forum.butian.net/share/4544
+详情请看：[某游戏无良辅助插件逆向分析与代码还原实践](https://xz.aliyun.com/news/18778)
 
 ### 2.2 JSFuck
 
 https://jsfuck.com/
 
 main=[cj.constclear,cj.propertyclear] 直接调用。
+or [How to fuck JSFuck](https://forum.butian.net/share/4561)
