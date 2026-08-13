@@ -1,3 +1,5 @@
+
+
 # ClarityJS
 JavaScript Deconfusion Tool.
 
@@ -18,7 +20,7 @@ JavaScript解混淆工具，提供多种解混淆配置，支持自定义模块�
 - line8的数组__main__以调整要加载的模块（如果不确定要用哪些模块，使用**节2 支持解密配置**中的配置即可）
 - line17的输入文件位置
 - line33的输出文件位置
-- line18的循环次数，默认为5
+- line13的循环次数，默认为1
 
 然后node main.js以运行。
 
